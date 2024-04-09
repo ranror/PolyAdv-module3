@@ -1,49 +1,40 @@
 pragma circom 2.0.0;
 
-/* This circuit template checks that c is the multiplication of a and b. */
-
 template Multiplier2 () {
+   component andGate = AND();
+   component notGate = NOT();
+   component orGate = OR();
 
-   // Input signals
-   signal input a;
-   signal input b;
 
-   // Output signals
+
+   signal input A;
+   signal input B;
    signal output Q;
 
-   // Component gates
-   component xorGate = XOR();
-   component notGate = NOT();
-   component andGate = AND();
 
-   // Intermediate signals
-   signal intermediate1;
-   signal intermediate2;
 
-   // Logic of circuits
-   xorGate.a <== a;
-   xorGate.b <== b;
-   intermediate1 <== xorGate.out;
+   andGate.A <== A;
+   andGate.B <== B;
 
-   notGate.in <== intermediate1;
-   intermediate2 <== notGate.out;
+   notGate.in <== B;
 
-   andGate.a <== intermediate1;
-   andGate.b <== intermediate2;
-   Q <== andGate.out;
+   orGate.A <== andGate.out;
+   orGate.B <== notGate.out;
+   Q <== orGate.out;
+
 }
 
-template XOR(){
+template OR(){
    signal input a;
    signal input b;
    signal output out;
-   out <== a+b-2*a*b;
+   out <== a+b-a*b;
 }
 
 template NOT(){
    signal input in;
    signal output out;
-   out <== 1-in;
+   out <== 1+in-2*in;
 }
 
 template AND(){
